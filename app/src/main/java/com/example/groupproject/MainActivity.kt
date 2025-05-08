@@ -1,8 +1,6 @@
 package com.example.groupproject
 
 import android.graphics.Color
-import android.location.Address
-import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -34,25 +32,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         Log.w( "MainActivity", "Inside onMapRead" )
         map = p0
 
-        var sydney : LatLng = LatLng( -33.86785, 151.20732 )
-        var camera : CameraUpdate = CameraUpdateFactory.newLatLngZoom( sydney, 16.0f )
+        var umd : LatLng = LatLng(38.98726435649732, -76.94266159109166)
+        var camera : CameraUpdate = CameraUpdateFactory.newLatLngZoom( umd, 16.0f )
         map.moveCamera(  camera )
 
-        // add a marker
+
         var mOptions : MarkerOptions = MarkerOptions( )
-        mOptions.position( sydney )
-        mOptions.title( "SYDNEY" )
+        mOptions.position( umd )
+        mOptions.title( "UMD" )
         mOptions.snippet( "HI" )
         var marker : Marker? = map.addMarker( mOptions )
         if( marker != null )
             Log.w( "MainActivity", "id of marker is " + marker.id )
 
-        var circleOptions : CircleOptions = CircleOptions( )
-        circleOptions.center( sydney )
-        circleOptions.radius( 100.0 )
-        circleOptions.strokeColor( Color.GREEN )
-        circleOptions.strokeWidth( 10.0f )
-        map.addCircle( circleOptions )
 
         var handler : ClickHandler = ClickHandler()
         map.setOnMarkerClickListener( handler )
