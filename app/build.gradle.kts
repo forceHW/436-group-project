@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.play.services.maps.v1910 )
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
+    implementation (libs.material)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
