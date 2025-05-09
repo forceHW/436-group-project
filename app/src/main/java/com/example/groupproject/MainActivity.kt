@@ -1,6 +1,5 @@
 package com.example.groupproject
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -9,15 +8,14 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var map : GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -33,21 +31,28 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         map = p0
 
         var umd : LatLng = LatLng(38.98726435649732, -76.94266159109166)
-        var camera : CameraUpdate = CameraUpdateFactory.newLatLngZoom( umd, 16.0f )
+        var camera : CameraUpdate = CameraUpdateFactory.newLatLngZoom( umd, 13.0f )
         map.moveCamera(  camera )
 
 
-        var mOptions : MarkerOptions = MarkerOptions( )
-        mOptions.position( umd )
-        mOptions.title( "UMD" )
-        mOptions.snippet( "HI" )
-        var marker : Marker? = map.addMarker( mOptions )
-        if( marker != null )
-            Log.w( "MainActivity", "id of marker is " + marker.id )
+        val locations = Locations(map)
+        locations.plotAllBusStops()
+
+
+
+//        var mOptions : MarkerOptions = MarkerOptions( )
+//        mOptions.position( umd )
+//        mOptions.title( "UMD" )
+//        mOptions.snippet( "HI" )
+//        var marker : Marker? = map.addMarker( mOptions )
+//        if( marker != null )
+//            Log.w( "MainActivity", "id of marker is " + marker.id )
 
 
         var handler : ClickHandler = ClickHandler()
         map.setOnMarkerClickListener( handler )
+
+
     }
 
     inner class ClickHandler : GoogleMap.OnMarkerClickListener {

@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.GroupProject" parent="Base.Theme.GroupProject" />
+
+
+    <style name="blueButton" parent="Widget.AppCompat.Button">
+        <item name="android:backgroundTint">#2196F3</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 </resources>
