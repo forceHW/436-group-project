@@ -10,6 +10,10 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 
+
+
+//TODO rename activity 2 and items in nav bar
+//TODO implement something meaningful
 class act2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,7 +21,7 @@ class act2 : AppCompatActivity() {
         setContentView(R.layout.activity_act2)
 
 
-        var adView : AdView = AdView( this )
+        var adView : AdView = AdView( this ) //advertisement at bottom of screen
         var adSize: AdSize = AdSize(AdSize.FULL_WIDTH,AdSize.AUTO_HEIGHT)
         adView.setAdSize(adSize)
 

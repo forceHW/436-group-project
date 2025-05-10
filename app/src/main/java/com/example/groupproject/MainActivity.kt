@@ -16,6 +16,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.material.navigation.NavigationView
 
+
+
+//TODO implement MVC arch
+
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var map : GoogleMap
     lateinit var drawerLayout: DrawerLayout
@@ -34,7 +38,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)  //show nav bar icon
 
 
-        val navView: NavigationView = findViewById(R.id.nav_view)
+        val navView: NavigationView = findViewById(R.id.nav_view)    //navigation bar onclicks
         navView.setNavigationItemSelectedListener { menuItem ->
             if(menuItem.itemId == R.id.act2){
                 val intent : Intent = Intent(this, act2::class.java)
@@ -64,7 +68,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
         val locations = Locations(map)
-        locations.plotAllBusStops()
+        locations.plotAllBusStops()    //add all stop locations at umd
 
 
 
@@ -85,13 +89,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     inner class ClickHandler : GoogleMap.OnMarkerClickListener {
         override fun onMarkerClick(p0: Marker): Boolean {
-            Log.w( "MainActivity", "Inside onMarkerClick" )
-            Log.w( "MainActivity", "marker's id is " + p0.id )
+//            Log.w( "MainActivity", "Inside onMarkerClick" )
+//            Log.w( "MainActivity", "marker's id is " + p0.id )
             return false
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {  //open/close nav bar
         return if (actionBarToggle.onOptionsItemSelected(item)) {
             true
         } else super.onOptionsItemSelected(item)
