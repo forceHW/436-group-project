@@ -26,7 +26,7 @@ interface BusApiService {
     fun getBusStops(): Call<List<BusStopInfo>>
 
     @GET("bus/stops/{stop_id}")
-    fun getBusStopDetails(@Path("stop_id") stopId: String): Call<List<BusStopDetail>> // Changed to expect array
+    fun getBusStopDetails(@Path("stop_id") stopId: String): Call<List<BusStopDetail>>
 }
 
 class Locations(private val map: GoogleMap) {
