@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation (libs.material)
+    implementation( libs.play.services.ads )
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
