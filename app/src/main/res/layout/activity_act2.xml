@@ -22,7 +22,7 @@
             android:text="History"
             android:textSize="35sp"
             android:background="@color/blue"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             />
 
 
@@ -33,7 +33,7 @@
             android:layout_weight="1"
             android:layout_marginTop="8dp"
             android:layout_gravity="center"
-            android:padding="16dp"/>
+            android:padding="16dp" />
 
         <Button
             android:id="@+id/backButton"
