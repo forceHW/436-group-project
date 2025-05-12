@@ -49,7 +49,7 @@ dependencies {
     implementation(libs.retrofit.gson)
     implementation (libs.material)
     implementation( libs.play.services.ads )
-    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.5.0"))
     implementation("com.google.firebase:firebase-analytics")
 
     testImplementation(libs.junit)
