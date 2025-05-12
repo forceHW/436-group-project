@@ -1,6 +1,7 @@
 package com.example.groupproject
 
 import android.content.Context
+import android.content.Intent
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
@@ -58,8 +59,15 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
         locations.plotAllBusStops()
 
         map.setOnMarkerClickListener { marker ->
-            //TODO marker onlclicks
-            false
+            val stopId = marker.tag as? String ?: return@setOnMarkerClickListener false
+            val title  = marker.title
+
+            val intent = Intent(context, StopDetailActivity::class.java).apply {
+                putExtra("EXTRA_STOP_ID", stopId)
+                putExtra("EXTRA_TITLE",   title)
+            }
+            context.startActivity(intent)
+            true
         }
     }
 }

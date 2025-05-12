@@ -72,11 +72,12 @@ class Locations(private val map: GoogleMap) {
                     val stopDetails = response.body()
                     stopDetails?.forEach { detail ->
                         val pos = LatLng(detail.lat, detail.long)
-                        map.addMarker(
+                        val marker = map.addMarker(
                             MarkerOptions()
                                 .position(pos)
                                 .title(detail.title)
                         )
+                        marker?.tag = detail.stop_id
                     }
                 } else {
                     Log.e("Locations", "Failed to fetch details for stop $stopId: ${response.code()}")
