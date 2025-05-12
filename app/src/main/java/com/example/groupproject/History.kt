@@ -2,52 +2,46 @@ package com.example.groupproject
 
 import android.content.Context
 import android.content.SharedPreferences
+import org.json.JSONArray
 import java.text.SimpleDateFormat
 import java.util.*
 
-class History {
+class History(context: Context) {
 
-    private var names: MutableList<String> = mutableListOf()
-    private var times: MutableList<String> = mutableListOf()
-    private var ids: MutableList<String> = mutableListOf()
+    private var names: MutableList<String> = mutableListOf<String>()
+    private var times: MutableList<String> = mutableListOf<String>()
+    private var ids: MutableList<String> = mutableListOf<String>()
+
+    private var pref: SharedPreferences =
+    context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
 
     //constructs history from shared preferences
-    constructor(context: Context) {
-        var pref: SharedPreferences =
-            context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
-
-        val idSet   = pref.getStringSet(PREFERENCE_IDS,emptySet()) ?: emptySet()
-        val nameSet = pref.getStringSet(PREFERENCE_NAMES,emptySet()) ?: emptySet()
-        val timeSet = pref.getStringSet(PREFERENCE_TIMES,emptySet()) ?: emptySet()
-
-        ids   = LinkedHashSet(idSet ).toMutableList()
-        names = LinkedHashSet(nameSet).toMutableList()
-        times = LinkedHashSet(timeSet).toMutableList()
-
-
-        //to make sure the lists are the same size
-        val minSize = minOf(names.size, times.size, ids.size)
-        if (names.size > minSize){
-            names = names.subList(0, minSize)
+    init {
+        names = loadList(PREFERENCE_NAMES)
+        times = loadList(PREFERENCE_TIMES)
+        ids   = loadList(PREFERENCE_IDS)
+        val min = minOf(names.size, times.size, ids.size)
+        if (names.size > min){
+            names = names.subList(0, min)
         }
-        if (times.size > minSize) {
-            times = times.subList(0, minSize)
+        if (times.size > min){
+            times = times.subList(0, min)
         }
-        if (ids.size > minSize) {
-            ids = ids.subList(0, minSize)
+        if (ids.size   > min){
+            ids   = ids.subList(0, min)
         }
     }
 
     //adds a new location to the history
-    fun addLocation(id: String, newLocation: String) {
-        if (newLocation.isNotBlank() || id.isNotBlank()) {
-            val index = ids.indexOf(id)
-            if (index != -1) {
-                names.removeAt(index)
-                times.removeAt(index)
-                ids.removeAt(index)
+    fun addLocation(id: String, name: String) {
+        if (id.isNotBlank() && name.isNotBlank()) {
+            val i = ids.indexOf(id)
+            if (i != -1) {
+                names.removeAt(i)
+                times.removeAt(i)
+                ids.removeAt(i)
             }
-            names.add(0, newLocation)
+            names.add(0, name)
             times.add(0, getCurrentTimestamp())
             ids.add(0, id)
         }
@@ -70,42 +64,49 @@ class History {
 
     //clears a specific location from history
     fun clearLocation(id: String): Boolean {
-        val index = ids.indexOf(id)
-        if (index != -1) {
-            names.removeAt(index)
-            times.removeAt(index)
-            ids.removeAt(index)
-            return true
-        } else{
-            return false
+        val curr = ids.indexOf(id)
+        return if (curr == -1) {
+            false
+        } else {
+            ids.removeAt(curr)
+            names.removeAt(curr)
+            times.removeAt(curr)
+            true
         }
     }
 
     //clears all locations from history
-    fun clearAllLocations(context: Context) {
-        if (names.isNotEmpty() || times.isNotEmpty()) {
-            names.clear()
-            times.clear()
-            ids.clear()
-            setPreferences(context)
-        }
+    fun clearAllLocations() {
+        names.clear(); times.clear(); ids.clear()
+        setPreferences()
     }
 
     //saves history to shared preferences
-    fun setPreferences(context: Context) {
-        var pref: SharedPreferences =
-            context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
-        var editor: SharedPreferences.Editor = pref.edit()
-        editor.putStringSet(PREFERENCE_NAMES, names.toSet())
-        editor.putStringSet(PREFERENCE_TIMES, times.toSet())
-        editor.putStringSet(PREFERENCE_IDS, ids.toSet())
-        editor.commit()
+    fun setPreferences() {
+        pref.edit().apply {
+            putString(PREFERENCE_NAMES, JSONArray(names).toString())
+            putString(PREFERENCE_TIMES, JSONArray(times).toString())
+            putString(PREFERENCE_IDS,   JSONArray(ids  ).toString())
+        }.commit()
     }
 
     //returns current time as a string
     private fun getCurrentTimestamp(): String {
         var time: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         return time.format(Date())
+    }
+
+    //helper function to load lists from shared preferences and keep organization
+    private fun loadList(key: String): MutableList<String> {
+        val all = pref.all[key]
+        val json = when (all) {
+            is String -> all
+            is Set<*> -> JSONArray(all.toList()).toString()
+                .also { pref.edit().putString(key, it).apply() }
+            else -> "[]"
+        }
+        val arr = JSONArray(json)
+        return MutableList(arr.length()) { i -> arr.getString(i) }
     }
 
     companion object {

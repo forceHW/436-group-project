@@ -60,7 +60,7 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
 
         map.setOnMarkerClickListener { marker ->
             MainActivity.history.addLocation((marker.tag ?: "No ID") as String,marker.title ?: "Unnamed")
-            MainActivity.history.setPreferences(context)
+            MainActivity.history.setPreferences()
             Log.w("History", MainActivity.history.getNames().toString() + " " + MainActivity.history.getTimes().toString())
             marker.showInfoWindow()
             true
