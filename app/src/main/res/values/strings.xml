@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">groupProject</string>
+    <string name="app_name">Cool Bus Stops</string>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyARRRWNziL_dellLzKxau0eXTv9nH8SV4U</string>
 
     <string name="nav_open">Open</string>
