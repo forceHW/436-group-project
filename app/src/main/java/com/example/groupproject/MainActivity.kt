@@ -16,6 +16,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        history = History(this)
+
         mapView = MapView(this)
         setContentView(mapView)
 
@@ -43,5 +45,9 @@ class MainActivity : AppCompatActivity() {
         return if (actionBarToggle.onOptionsItemSelected(item)) {
             true
         } else super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        lateinit var history: History
     }
 }
