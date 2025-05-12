@@ -34,8 +34,7 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
         drawerLayout.addDrawerListener(actionBarToggle)
         actionBarToggle.syncState()
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        context.setSupportActionBar(toolbar)
+
 
         val mapFragment = (context as MainActivity).supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
