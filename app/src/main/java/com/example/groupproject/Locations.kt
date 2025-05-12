@@ -52,12 +52,12 @@ class Locations(private val map: GoogleMap) {
                         fetchStopDetails(stop.stop_id)
                     }
                 } else {
-                    Log.e("Locations", "API error: ${response.code()}")
+                    Log.e("Locations", "API err ${response.code()}")
                 }
             }
 
             override fun onFailure(call: Call<List<BusStopInfo>>, t: Throwable) {
-                Log.e("Locations", "Network failure: ${t.message}")
+                Log.e("Locations", "Network failure on AllBusStops: ${t.message}")
             }
         })
     }
@@ -80,12 +80,12 @@ class Locations(private val map: GoogleMap) {
                         marker?.tag = detail.stop_id
                     }
                 } else {
-                    Log.e("Locations", "Failed to fetch details for stop $stopId: ${response.code()}")
+                    Log.e("Locations", "API err2 $stopId: ${response.code()}")
                 }
             }
 
             override fun onFailure(call: Call<List<BusStopDetail>>, t: Throwable) {
-                Log.e("Locations", "Network failure for stop $stopId: ${t.message}")
+                Log.e("Locations", "Network failure on StopDetails $stopId: ${t.message}")
             }
         })
     }
