@@ -11,20 +11,19 @@
         android:padding="16dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:weightSum="1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:weightSum="1">
 
         <!-- Stop name at top -->
         <TextView
             android:id="@+id/stopTitleView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Stop name"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            android:paddingBottom="8dp"/>
+            android:textSize="35sp"
+            android:padding="10dp"
+            android:background="@color/blue"
+            android:textColor="@color/white"
+            />
 
         <!-- Routes header -->
         <TextView
@@ -35,20 +34,12 @@
             android:textAppearance="?attr/textAppearanceSubtitle1"
             android:paddingTop="8dp"/>
 
-        <!-- Scrollable container for your routes list -->
-        <ScrollView
+        <TextView
+            android:id="@+id/routesListView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:paddingTop="4dp">
-
-            <TextView
-                android:id="@+id/routesListView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Loading routes…"
-                android:lineSpacingExtra="4dp"/>
-        </ScrollView>
+            android:layout_height="wrap_content"
+            android:text="Loading routes…"
+            android:lineSpacingExtra="4dp"/>
 
     </LinearLayout>
 
