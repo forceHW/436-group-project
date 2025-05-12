@@ -72,33 +72,53 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
             val title  = marker.title ?: "Stop Details"
 
             Log.d("MapView", "InfoWindow clicked for stopId=$stopId, title=$title")
+
             // 1) Fetch all route IDs
             locations.getAllRouteIds { allRouteIds ->
                 Log.d("MapView", "All route IDs: $allRouteIds")
 
                 if (allRouteIds.isEmpty()) {
                     Log.w("MapView", "No routes returned by API")
-                } else {
-                    // 2) For each route, print its stops
-                    allRouteIds.forEach { routeId ->
-                        Log.d("MapView", "Printing stops for route $routeId")
-                        locations.printRouteStopIds(listOf(routeId))
+                    // still launch with empty list
+                    Intent(context, StopDetailActivity::class.java).apply {
+                        putExtra("EXTRA_STOP_ID", stopId)
+                        putExtra("EXTRA_TITLE",   title)
+                        putStringArrayListExtra("EXTRA_ROUTE_IDS", ArrayList<String>())
+                        context.startActivity(this)
                     }
-                }
+                } else {
+                    // 2) Fetch every route's stops in one go
+                    locations.getRouteStopIds(allRouteIds) { mapOfStops ->
+                        // 3) Filter to only those routes whose stop list contains our stopId
+                        val matchingRoutes = mapOfStops.filter { (_, stops) ->
+                            containsString(stops, stopId)
+                        }.keys.toList()
 
-                // 3) Finally, still launch your detail activity
-                Intent(context, StopDetailActivity::class.java).apply {
-                    putExtra("EXTRA_STOP_ID", stopId)
-                    putExtra("EXTRA_TITLE",   title)
-                    // You might still want only the matching routes here––adjust as needed
-                    putStringArrayListExtra("EXTRA_ROUTE_IDS", ArrayList(allRouteIds))
-                    context.startActivity(this)
+                        Log.d("MapView", "Routes serving $stopId: $matchingRoutes")
+
+                        // 4) Launch detail activity with only the matching route IDs
+                        Intent(context, StopDetailActivity::class.java).apply {
+                            putExtra("EXTRA_STOP_ID", stopId)
+                            putExtra("EXTRA_TITLE",   title)
+                            putStringArrayListExtra(
+                                "EXTRA_ROUTE_IDS",
+                                ArrayList(matchingRoutes)
+                            )
+                            context.startActivity(this)
+                        }
+                    }
                 }
             }
 
             true
         }
 
+    }
 
+    fun containsString(items: List<String>, target: String): Boolean {
+        for (item in items) {
+            if (item == target) return true
+        }
+        return false
     }
 }

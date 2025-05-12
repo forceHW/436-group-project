@@ -208,39 +208,48 @@ class Locations(private val map: GoogleMap) {
      * GET /bus/routes/{route_ids}
      * for any list of IDs you pass in.
      */
-    fun printRouteStopIds(routeIds: List<String>) {
+    fun getRouteStopIds(
+        routeIds: List<String>,
+        callback: (Map<String, List<String>>) -> Unit
+    ) {
         if (routeIds.isEmpty()) {
-            Log.w("RouteStops", "printRouteStopIds: no route IDs provided")
+            callback(emptyMap())
             return
         }
         val joined = routeIds.joinToString(",")
         api.getRoutesRaw(joined).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                val result = mutableMapOf<String, List<String>>()
                 if (!response.isSuccessful) {
-                    Log.e("RouteStops", "HTTP ${response.code()} for routes [$joined]")
+                    // on error, return empty lists for each route
+                    routeIds.forEach { result[it] = emptyList() }
+                    callback(result)
                     return
                 }
                 val raw = response.body()?.string().orEmpty()
                 try {
-                    // This endpoint returns a JSON array at the root
                     val arr = JSONArray(raw)
+                    // parse each route object in the array
                     for (i in 0 until arr.length()) {
-                        val routeObj: JSONObject = arr.getJSONObject(i)
-                        val rid = routeObj.getString("route_id")
-                        val stopsArr: JSONArray = routeObj.getJSONArray("stops")
-                        val stops = mutableListOf<String>()
-                        for (j in 0 until stopsArr.length()) {
-                            stops += stopsArr.getString(j)
+                        val obj = arr.getJSONObject(i)
+                        val rid = obj.getString("route_id")
+                        val sa = obj.getJSONArray("stops")
+                        val stops = List(sa.length()) { idx ->
+                            sa.getString(idx)
                         }
-                        Log.i("RouteStops", "route $rid stops: $stops")
+                        result[rid] = stops
                     }
                 } catch (e: Exception) {
-                    Log.e("RouteStops", "Failed to parse JSON: ${e.message}")
+                    // on parse error, empty lists
+                    routeIds.forEach { result[it] = emptyList() }
                 }
+                callback(result)
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e("RouteStops", "Network error fetching stops for [$joined]: ${t.message}")
+                // on network failure, empty lists
+                val result = routeIds.associateWith { emptyList<String>() }
+                callback(result)
             }
         })
     }
