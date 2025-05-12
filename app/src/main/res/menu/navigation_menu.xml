@@ -5,11 +5,15 @@
 
     <item
         android:id="@+id/act2"
-        android:title="Geeker max" />
+        android:title="Bus Stop History" />
 
     <item
         android:id="@+id/act3"
         android:title="Ethan's Miku Game" />
+
+    <item
+        android:id="@+id/settings"
+        android:title="Settings" />
 
 
 </menu>
