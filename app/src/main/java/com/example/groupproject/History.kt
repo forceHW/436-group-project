@@ -19,6 +19,10 @@ class History {
 
         names = namesSet?.toMutableList() ?: mutableListOf()
         times = timesSet?.toMutableList() ?: mutableListOf()
+
+        val minSize = minOf(names.size, times.size)
+        if (names.size > minSize) names = names.subList(0, minSize)
+        if (times.size > minSize) times = times.subList(0, minSize)
     }
 
     constructor(existingNames: List<String>, existingTimes: List<String>) {
@@ -54,6 +58,15 @@ class History {
             true                       // something was deleted
         } else {
             false                      // nothing matched
+        }
+    }
+
+    fun clearAllLocations(context: Context) {
+        val hadData = names.isNotEmpty() || times.isNotEmpty()
+        if (hadData) {
+            names.clear()
+            times.clear()
+            setPreferences(context)   // save only if Context provided
         }
     }
 

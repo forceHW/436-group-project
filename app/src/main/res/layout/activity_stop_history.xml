@@ -44,6 +44,15 @@
             android:backgroundTint="@color/blue"
             android:padding="16dp"/>
 
+        <Button
+            android:id="@+id/clearButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Clear"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/blue"
+            android:padding="16dp"/>
+
     </LinearLayout>
 
 
