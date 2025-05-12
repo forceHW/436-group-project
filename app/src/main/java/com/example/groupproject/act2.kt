@@ -1,6 +1,8 @@
 package com.example.groupproject
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +22,7 @@ class act2 : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_act2)
 
+        val backButton = findViewById<Button>(R.id.backButton)
 
         var adView : AdView = AdView( this ) //advertisement at bottom of screen
         var adSize: AdSize = AdSize(AdSize.FULL_WIDTH,AdSize.AUTO_HEIGHT)
@@ -35,6 +38,11 @@ class act2 : AppCompatActivity() {
         adLayout.addView( adView )
         adView.loadAd( request )
 
+        backButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
     }
 }
