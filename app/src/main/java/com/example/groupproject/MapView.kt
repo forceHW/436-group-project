@@ -29,10 +29,10 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
 
 
 
-        drawerLayout = findViewById(R.id.drawer)
-        actionBarToggle = ActionBarDrawerToggle(context as MainActivity, drawerLayout, R.string.nav_open, R.string.nav_close)
-        drawerLayout.addDrawerListener(actionBarToggle)
-        actionBarToggle.syncState()
+//        drawerLayout = findViewById(R.id.drawer) //REDUNDAT CODE
+//        actionBarToggle = ActionBarDrawerToggle(context as MainActivity, drawerLayout, R.string.nav_open, R.string.nav_close)
+//        drawerLayout.addDrawerListener(actionBarToggle)
+//        actionBarToggle.syncState()
 
 
 
