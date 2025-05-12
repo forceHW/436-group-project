@@ -18,10 +18,11 @@ import com.google.android.gms.ads.AdView
 
 
 
-//TODO rename activity 2 and items in nav bar
+//TODO rename items in nav bar
 //TODO implement something meaningful
 class StopHistory : AppCompatActivity() {
 
+    //temp clear button to be removed
     private lateinit var clearButton: Button
     private lateinit var adapter: ArrayAdapter<String>
     private lateinit var gestures: GestureDetector
@@ -32,8 +33,10 @@ class StopHistory : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_stop_history)
 
-        historyList = findViewById(R.id.history)
+        historyList = findViewById(R.id.historyView)
         updateHistoryList()
+
+        //Handles clicking on a stop in history
         historyList.onItemClickListener =
             android.widget.AdapterView.OnItemClickListener { _, _, position, _ ->
                 val title  = MainActivity.history.getNames()[position]
@@ -43,24 +46,28 @@ class StopHistory : AppCompatActivity() {
                 startActivity(intent)
             }
 
+        //handles double tapping on a stop in history to delete
         setupGestureDetector()
 
+        //tells users how to use the history
         Toast.makeText(this,"Tap once for details, double‑tap to delete a stop.", Toast.LENGTH_LONG).show()
 
+        //allows users to go back to the map
         val backButton = findViewById<Button>(R.id.backButton)
-
         backButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
 
+        //temp clear button to be removed
         clearButton = findViewById(R.id.clearButton)
         clearButton.setOnClickListener {
             MainActivity.history.clearAllLocations(this)
             updateHistoryList()
         }
 
+        //handles banner ad at the bottom of the screen
         var adView : AdView = AdView( this ) //advertisement at bottom of screen
         var adSize: AdSize = AdSize(AdSize.FULL_WIDTH,AdSize.AUTO_HEIGHT)
         adView.setAdSize(adSize)
@@ -77,10 +84,11 @@ class StopHistory : AppCompatActivity() {
 
     }
 
+    //actively updates the history list when changes are made
     private fun updateHistoryList() {
-        val rows = MainActivity.history.getNames()
-            .zip(MainActivity.history.getTimestamps())
-            .map { (n, t) -> "$n\n$t" }
+        val names = MainActivity.history.getNames()
+        val times = MainActivity.history.getTimes()
+        val rows  = MutableList(names.size) { i -> "${names[i]}\n${times[i]}" }
 
         if (::adapter.isInitialized) {
             adapter.clear()
@@ -92,11 +100,11 @@ class StopHistory : AppCompatActivity() {
         }
     }
 
+    //handles double tapping on a stop in history to delete
     private fun setupGestureDetector() {
         gestures = GestureDetector(
             this,
             object : GestureDetector.SimpleOnGestureListener() {
-
                 override fun onDoubleTap(e: MotionEvent): Boolean {
                     val pos = historyList.pointToPosition(e.x.toInt(), e.y.toInt())
                     if (pos != ListView.INVALID_POSITION) {
@@ -109,10 +117,6 @@ class StopHistory : AppCompatActivity() {
                     return true
                 }
             })
-        historyList.setOnTouchListener { _, ev ->
-            gestures.onTouchEvent(ev)
-            false
-        }
     }
 
 }
