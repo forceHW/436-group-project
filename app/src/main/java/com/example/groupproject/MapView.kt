@@ -52,22 +52,27 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
         locations = Locations(map) //locations controller
 
         val umd = LatLng(38.98726435649732, -76.94266159109166)
-        val camera = CameraUpdateFactory.newLatLngZoom(umd, 13.0f)
+        val camera = CameraUpdateFactory.newLatLngZoom(umd, 15.0f)
         map.moveCamera(camera)
 
 
         locations.plotAllBusStops()
 
         map.setOnMarkerClickListener { marker ->
-            val stopId = marker.tag as? String ?: return@setOnMarkerClickListener false
-            val title  = marker.title
-
-            val intent = Intent(context, StopDetailActivity::class.java).apply {
-                putExtra("EXTRA_STOP_ID", stopId)
-                putExtra("EXTRA_TITLE",   title)
-            }
-            context.startActivity(intent)
+            marker.showInfoWindow()
             true
         }
+
+        map.setOnInfoWindowClickListener { marker ->
+            val stopId = marker.tag as? String ?: return@setOnInfoWindowClickListener
+            val title  = marker.title
+
+            Intent(context, StopDetailActivity::class.java).apply {
+                putExtra("EXTRA_STOP_ID", stopId)
+                putExtra("EXTRA_TITLE",   title)
+                context.startActivity(this)
+            }
+        }
+
     }
 }
