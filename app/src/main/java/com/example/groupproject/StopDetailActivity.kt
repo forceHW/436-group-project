@@ -13,10 +13,22 @@ class StopDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = intent.getStringExtra("EXTRA_TITLE")
 
-        val stopId = intent.getStringExtra("EXTRA_STOP_ID") ?: ""
-        // find the TextView by ID:
-        val stopIdView = findViewById<TextView>(R.id.stopIdView)
-        stopIdView.text = "Stop ID: $stopId"
+        // Show the stop ID
+        val stopId = intent.getStringExtra("EXTRA_STOP_ID").orEmpty()
+        findViewById<TextView>(R.id.stopIdView).text = "Stop ID: $stopId"
+
+        // Grab the list of route IDs
+        val routeIds = intent
+            .getStringArrayListExtra("EXTRA_ROUTE_IDS")
+            .orEmpty()
+
+        // Display them
+        val routesView = findViewById<TextView>(R.id.routesView)
+        routesView.text = if (routeIds.isNotEmpty()) {
+            routeIds.joinToString("\n")
+        } else {
+            "No routes serve this stop."
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -24,3 +36,4 @@ class StopDetailActivity : AppCompatActivity() {
         return true
     }
 }
+
