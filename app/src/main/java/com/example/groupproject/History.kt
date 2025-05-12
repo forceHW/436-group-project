@@ -10,6 +10,7 @@ class History {
     private var names: MutableList<String> = mutableListOf()
     private var times: MutableList<String> = mutableListOf()
 
+    //constructs history from shared preferences
     constructor(context: Context) {
         var pref: SharedPreferences =
             context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
@@ -20,16 +21,17 @@ class History {
         names = namesSet?.toMutableList() ?: mutableListOf()
         times = timesSet?.toMutableList() ?: mutableListOf()
 
+        //to make sure the lists are the same size
         val minSize = minOf(names.size, times.size)
-        if (names.size > minSize) names = names.subList(0, minSize)
-        if (times.size > minSize) times = times.subList(0, minSize)
+        if (names.size > minSize){
+            names = names.subList(0, minSize)
+        }
+        if (times.size > minSize) {
+            times = times.subList(0, minSize)
+        }
     }
 
-    constructor(existingNames: List<String>, existingTimes: List<String>) {
-        names = existingNames.toMutableList()
-        times = existingTimes.toMutableList()
-    }
-
+    //adds a new location to the history
     fun addLocation(newLocation: String) {
         if (newLocation.isNotBlank()) {
             val index = names.indexOf(newLocation)
@@ -42,34 +44,38 @@ class History {
         }
     }
 
+    //returns name of all locations in history
     fun getNames(): List<String> {
         return names
     }
 
-    fun getTimestamps(): List<String> {
+    //returns time of all locations in history
+    fun getTimes(): List<String> {
         return times
     }
 
+    //clears a specific location from history
     fun clearLocation(location: String): Boolean {
         val index = names.indexOf(location)
-        return if (index != -1) {
+        if (index != -1) {
             names.removeAt(index)
             times.removeAt(index)
-            true                       // something was deleted
-        } else {
-            false                      // nothing matched
+            return true
+        } else{
+            return false
         }
     }
 
+    //clears all locations from history
     fun clearAllLocations(context: Context) {
-        val hadData = names.isNotEmpty() || times.isNotEmpty()
-        if (hadData) {
+        if (names.isNotEmpty() || times.isNotEmpty()) {
             names.clear()
             times.clear()
-            setPreferences(context)   // save only if Context provided
+            setPreferences(context)
         }
     }
 
+    //saves history to shared preferences
     fun setPreferences(context: Context) {
         var pref: SharedPreferences =
             context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
@@ -79,9 +85,10 @@ class History {
         editor.commit()
     }
 
+    //returns current time as a string
     private fun getCurrentTimestamp(): String {
-        var sdf: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        return sdf.format(Date())
+        var time: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return time.format(Date())
     }
 
     companion object {

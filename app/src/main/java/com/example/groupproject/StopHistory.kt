@@ -2,11 +2,14 @@ package com.example.groupproject
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.SimpleAdapter
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdRequest
@@ -15,33 +18,56 @@ import com.google.android.gms.ads.AdView
 
 
 
-//TODO rename activity 2 and items in nav bar
+//TODO rename items in nav bar
 //TODO implement something meaningful
 class StopHistory : AppCompatActivity() {
 
+    //temp clear button to be removed
     private lateinit var clearButton: Button
+    private lateinit var adapter: ArrayAdapter<String>
+    private lateinit var gestures: GestureDetector
+    private lateinit var historyList: ListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_stop_history)
 
+        historyList = findViewById(R.id.historyView)
         updateHistoryList()
-        val backButton = findViewById<Button>(R.id.backButton)
 
+        //Handles clicking on a stop in history
+        historyList.onItemClickListener =
+            android.widget.AdapterView.OnItemClickListener { _, _, position, _ ->
+                val title  = MainActivity.history.getNames()[position]
+                intent = Intent(this, StopDetailActivity::class.java).apply {
+                    putExtra("EXTRA_TITLE", title)
+                }
+                startActivity(intent)
+            }
+
+        //handles double tapping on a stop in history to delete
+        setupGestureDetector()
+
+        //tells users how to use the history
+        Toast.makeText(this,"Tap once for details, double‑tap to delete a stop.", Toast.LENGTH_LONG).show()
+
+        //allows users to go back to the map
+        val backButton = findViewById<Button>(R.id.backButton)
         backButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
         }
 
+        //temp clear button to be removed
         clearButton = findViewById(R.id.clearButton)
         clearButton.setOnClickListener {
             MainActivity.history.clearAllLocations(this)
             updateHistoryList()
         }
 
-
+        //handles banner ad at the bottom of the screen
         var adView : AdView = AdView( this ) //advertisement at bottom of screen
         var adSize: AdSize = AdSize(AdSize.FULL_WIDTH,AdSize.AUTO_HEIGHT)
         adView.setAdSize(adSize)
@@ -58,14 +84,39 @@ class StopHistory : AppCompatActivity() {
 
     }
 
-    fun updateHistoryList() {
-        findViewById<ListView>(R.id.history).adapter =
-            ArrayAdapter(
-                this,
-                android.R.layout.simple_list_item_1,
-                MainActivity.history.getNames().mapIndexed { i, n ->
-                    "$n\n${MainActivity.history.getTimestamps()[i]}"
-                }
-            )
+    //actively updates the history list when changes are made
+    private fun updateHistoryList() {
+        val names = MainActivity.history.getNames()
+        val times = MainActivity.history.getTimes()
+        val rows  = MutableList(names.size) { i -> "${names[i]}\n${times[i]}" }
+
+        if (::adapter.isInitialized) {
+            adapter.clear()
+            adapter.addAll(rows)
+            adapter.notifyDataSetChanged()
+        } else {
+            adapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,rows.toMutableList())
+            historyList.adapter = adapter
+        }
     }
+
+    //handles double tapping on a stop in history to delete
+    private fun setupGestureDetector() {
+        gestures = GestureDetector(
+            this,
+            object : GestureDetector.SimpleOnGestureListener() {
+                override fun onDoubleTap(e: MotionEvent): Boolean {
+                    val pos = historyList.pointToPosition(e.x.toInt(), e.y.toInt())
+                    if (pos != ListView.INVALID_POSITION) {
+                        val title = MainActivity.history.getNames()[pos]
+                        if (MainActivity.history.clearLocation(title)) {
+                            MainActivity.history.setPreferences(this@StopHistory)
+                            updateHistoryList()
+                        }
+                    }
+                    return true
+                }
+            })
+    }
+
 }
