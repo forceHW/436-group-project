@@ -66,16 +66,39 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
             true
         }
 
+        // **New**: on info‐window click, fetch all routes then print their stops
         map.setOnInfoWindowClickListener { marker ->
             val stopId = marker.tag as? String ?: return@setOnInfoWindowClickListener
-            val title  = marker.title
+            val title  = marker.title ?: "Stop Details"
 
-            Intent(context, StopDetailActivity::class.java).apply {
-                putExtra("EXTRA_STOP_ID", stopId)
-                putExtra("EXTRA_TITLE",   title)
-                context.startActivity(this)
+            Log.d("MapView", "InfoWindow clicked for stopId=$stopId, title=$title")
+            // 1) Fetch all route IDs
+            locations.getAllRouteIds { allRouteIds ->
+                Log.d("MapView", "All route IDs: $allRouteIds")
+
+                if (allRouteIds.isEmpty()) {
+                    Log.w("MapView", "No routes returned by API")
+                } else {
+                    // 2) For each route, print its stops
+                    allRouteIds.forEach { routeId ->
+                        Log.d("MapView", "Printing stops for route $routeId")
+                        locations.printRouteStopIds(listOf(routeId))
+                    }
+                }
+
+                // 3) Finally, still launch your detail activity
+                Intent(context, StopDetailActivity::class.java).apply {
+                    putExtra("EXTRA_STOP_ID", stopId)
+                    putExtra("EXTRA_TITLE",   title)
+                    // You might still want only the matching routes here––adjust as needed
+                    putStringArrayListExtra("EXTRA_ROUTE_IDS", ArrayList(allRouteIds))
+                    context.startActivity(this)
+                }
             }
+
+            true
         }
+
 
     }
 }
