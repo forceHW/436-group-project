@@ -2,46 +2,77 @@ package com.example.groupproject
 
 import android.content.Context
 import android.content.SharedPreferences
+import java.text.SimpleDateFormat
+import java.util.*
 
 class History {
-    private var history: MutableList<String> = mutableListOf()
+
+    private var names: MutableList<String> = mutableListOf()
+    private var times: MutableList<String> = mutableListOf()
 
     constructor(context: Context) {
-        val pref: SharedPreferences = context.getSharedPreferences(
-            context.packageName + "_preferences",
-            Context.MODE_PRIVATE
-        )
-        val historySet = pref.getStringSet(PREFERENCE_HISTORY, setOf()) ?: setOf()
-        history = historySet.toMutableList()
+        var pref: SharedPreferences =
+            context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
+
+        var namesSet: Set<String>? = pref.getStringSet(PREFERENCE_NAMES, setOf())
+        var timesSet: Set<String>? = pref.getStringSet(PREFERENCE_TIMES, setOf())
+
+        names = namesSet?.toMutableList() ?: mutableListOf()
+        times = timesSet?.toMutableList() ?: mutableListOf()
     }
 
-    constructor(existingHistory: List<String>) {
-        history = existingHistory.toMutableList()
+    constructor(existingNames: List<String>, existingTimes: List<String>) {
+        names = existingNames.toMutableList()
+        times = existingTimes.toMutableList()
     }
 
-    fun addLocation(location: String): Unit {
-        if (location.isNotBlank()) {
-            history.remove(location) // Avoid duplicates
-            history.add(0, location) // Add to top
+    fun addLocation(newLocation: String) {
+        if (newLocation.isNotBlank()) {
+            val index = names.indexOf(newLocation)
+            if (index != -1) {
+                names.removeAt(index)
+                times.removeAt(index)
+            }
+            names.add(0, newLocation)
+            times.add(0, getCurrentTimestamp())
         }
     }
 
-    fun getHistory(): List<String> {
-        return history
+    fun getNames(): List<String> {
+        return names
     }
 
-    fun clearHistory(): Unit {
-        history.clear()
+    fun getTimestamps(): List<String> {
+        return times
+    }
+
+    fun clearLocation(location: String): Boolean {
+        val index = names.indexOf(location)
+        return if (index != -1) {
+            names.removeAt(index)
+            times.removeAt(index)
+            true                       // something was deleted
+        } else {
+            false                      // nothing matched
+        }
     }
 
     fun setPreferences(context: Context) {
-        val pref: SharedPreferences = context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
-        val editor: SharedPreferences.Editor = pref.edit()
-        editor.putStringSet(PREFERENCE_HISTORY, history.toSet())
+        var pref: SharedPreferences =
+            context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
+        var editor: SharedPreferences.Editor = pref.edit()
+        editor.putStringSet(PREFERENCE_NAMES, names.toSet())
+        editor.putStringSet(PREFERENCE_TIMES, times.toSet())
         editor.commit()
     }
 
+    private fun getCurrentTimestamp(): String {
+        var sdf: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return sdf.format(Date())
+    }
+
     companion object {
-        private const val PREFERENCE_HISTORY: String = "location_history"
+        private const val PREFERENCE_NAMES: String = "location_names"
+        private const val PREFERENCE_TIMES: String = "location_times"
     }
 }

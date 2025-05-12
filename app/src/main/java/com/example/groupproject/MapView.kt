@@ -3,6 +3,7 @@ package com.example.groupproject
 import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.google.android.gms.maps.CameraUpdate
@@ -59,6 +60,9 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
         locations.plotAllBusStops()
 
         map.setOnMarkerClickListener { marker ->
+            MainActivity.history.addLocation(marker.title ?: "Unnamed")
+            MainActivity.history.setPreferences(context)
+            Log.w("History", MainActivity.history.getNames().toString() + " " + MainActivity.history.getTimestamps().toString())
             marker.showInfoWindow()
             true
         }
