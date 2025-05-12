@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     fun handleNavItemClick(menuItem: MenuItem): Boolean {
         return when (menuItem.itemId) {
             R.id.act2 -> {
-                val intent = Intent(this, act2::class.java)
+                val intent = Intent(this, StopHistory::class.java)
                 startActivity(intent)
                 true
             }

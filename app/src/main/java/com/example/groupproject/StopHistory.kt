@@ -6,10 +6,6 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -18,15 +14,13 @@ import com.google.android.gms.ads.AdView
 
 //TODO rename activity 2 and items in nav bar
 //TODO implement something meaningful
-class act2 : AppCompatActivity() {
+class StopHistory : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_act2)
 
         val backButton = findViewById<Button>(R.id.backButton)
-        val recyclerView = findViewById<RecyclerView>(R.id.history)
-        recyclerView.layoutManager = LinearLayoutManager(this)
 
         var adView : AdView = AdView( this ) //advertisement at bottom of screen
         var adSize: AdSize = AdSize(AdSize.FULL_WIDTH,AdSize.AUTO_HEIGHT)
