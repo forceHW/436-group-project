@@ -22,16 +22,16 @@ data class BusStopDetail(
 )
 
 interface BusApiService {
-    @GET("bus/stops")
+    @GET("bus/stops")     //find bus stop titles
     fun getBusStops(): Call<List<BusStopInfo>>
 
-    @GET("bus/stops/{stop_id}")
+    @GET("bus/stops/{stop_id}")   //allows us to retrieve bus stop lat lon data
     fun getBusStopDetails(@Path("stop_id") stopId: String): Call<List<BusStopDetail>>
 }
 
 class Locations(private val map: GoogleMap) {
 
-    private val retrofit = Retrofit.Builder()
+    private val retrofit = Retrofit.Builder()  //retrofit init
         .baseUrl("https://api.umd.io/v1/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
@@ -49,7 +49,7 @@ class Locations(private val map: GoogleMap) {
                     //Log.d("Locations", "Fetched ${busStops.size} bus stops")
 
                     for (stop in busStops) {
-                        fetchStopDetails(stop.stop_id)
+                        fetchStopDetails(stop.stop_id)  //use auxillary function to plot lat long of each bus
                     }
                 } else {
                     Log.e("Locations", "API err ${response.code()}")
@@ -72,7 +72,7 @@ class Locations(private val map: GoogleMap) {
                     val stopDetails = response.body()
                     stopDetails?.forEach { detail ->
                         val pos = LatLng(detail.lat, detail.long)
-                        val marker = map.addMarker(
+                        val marker = map.addMarker(    //plot marker onto map
                             MarkerOptions()
                                 .position(pos)
                                 .title(detail.title)
