@@ -21,9 +21,8 @@ class MainActivity : AppCompatActivity() {
         mapView = MapView(this)
         setContentView(mapView)
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        this.setSupportActionBar(toolbar)
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer)
+
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer)   //nav bar initialization + onclick init
         actionBarToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
         drawerLayout.addDrawerListener(actionBarToggle)
         actionBarToggle.syncState()
@@ -32,10 +31,16 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)  //nav bar icon
     }
 
-    fun handleNavItemClick(menuItem: MenuItem): Boolean {
+    fun handleNavItemClick(menuItem: MenuItem): Boolean {  //items in nav menu onlcick
         return when (menuItem.itemId) {
             R.id.act2 -> {
                 val intent = Intent(this, StopHistory::class.java)
+                startActivity(intent)
+                true
+            }
+
+            R.id.act3 ->{
+                val intent = Intent(this, Logins::class.java)
                 startActivity(intent)
                 true
             }
@@ -43,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {   //open/close even handler
         return if (actionBarToggle.onOptionsItemSelected(item)) {
             true
         } else super.onOptionsItemSelected(item)

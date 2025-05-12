@@ -25,7 +25,7 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
     private lateinit var actionBarToggle: ActionBarDrawerToggle
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.activity_main, this, true)
+        LayoutInflater.from(context).inflate(R.layout.activity_main, this, true)  //create child view, allows us to utilize all resources from main
 
 
 
@@ -36,7 +36,7 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
 
 
 
-        val mapFragment = (context as MainActivity).supportFragmentManager
+        val mapFragment = (context as MainActivity).supportFragmentManager  //map initialization
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
@@ -59,9 +59,9 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
         locations.plotAllBusStops()
 
         map.setOnMarkerClickListener { marker ->
-            MainActivity.history.addLocation(marker.title ?: "Unnamed")
-            MainActivity.history.setPreferences(context)
-            Log.w("History", MainActivity.history.getNames().toString() + " " + MainActivity.history.getTimestamps().toString())
+            MainActivity.history.addLocation((marker.tag ?: "No ID") as String,marker.title ?: "Unnamed")
+            MainActivity.history.setPreferences()
+            Log.w("History", MainActivity.history.getNames().toString() + " " + MainActivity.history.getTimes().toString())
             marker.showInfoWindow()
             true
         }

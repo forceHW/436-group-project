@@ -2,89 +2,115 @@ package com.example.groupproject
 
 import android.content.Context
 import android.content.SharedPreferences
+import org.json.JSONArray
 import java.text.SimpleDateFormat
 import java.util.*
 
-class History {
+class History(context: Context) {
 
-    private var names: MutableList<String> = mutableListOf()
-    private var times: MutableList<String> = mutableListOf()
+    private var names: MutableList<String> = mutableListOf<String>()
+    private var times: MutableList<String> = mutableListOf<String>()
+    private var ids: MutableList<String> = mutableListOf<String>()
 
-    constructor(context: Context) {
-        var pref: SharedPreferences =
-            context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
+    private var pref: SharedPreferences =
+    context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
 
-        var namesSet: Set<String>? = pref.getStringSet(PREFERENCE_NAMES, setOf())
-        var timesSet: Set<String>? = pref.getStringSet(PREFERENCE_TIMES, setOf())
-
-        names = namesSet?.toMutableList() ?: mutableListOf()
-        times = timesSet?.toMutableList() ?: mutableListOf()
-
-        val minSize = minOf(names.size, times.size)
-        if (names.size > minSize) names = names.subList(0, minSize)
-        if (times.size > minSize) times = times.subList(0, minSize)
-    }
-
-    constructor(existingNames: List<String>, existingTimes: List<String>) {
-        names = existingNames.toMutableList()
-        times = existingTimes.toMutableList()
-    }
-
-    fun addLocation(newLocation: String) {
-        if (newLocation.isNotBlank()) {
-            val index = names.indexOf(newLocation)
-            if (index != -1) {
-                names.removeAt(index)
-                times.removeAt(index)
-            }
-            names.add(0, newLocation)
-            times.add(0, getCurrentTimestamp())
+    //constructs history from shared preferences
+    init {
+        names = loadList(PREFERENCE_NAMES)
+        times = loadList(PREFERENCE_TIMES)
+        ids   = loadList(PREFERENCE_IDS)
+        val min = minOf(names.size, times.size, ids.size)
+        if (names.size > min){
+            names = names.subList(0, min)
+        }
+        if (times.size > min){
+            times = times.subList(0, min)
+        }
+        if (ids.size   > min){
+            ids   = ids.subList(0, min)
         }
     }
 
+    //adds a new location to the history
+    fun addLocation(id: String, name: String) {
+        if (id.isNotBlank() && name.isNotBlank()) {
+            val i = ids.indexOf(id)
+            if (i != -1) {
+                names.removeAt(i)
+                times.removeAt(i)
+                ids.removeAt(i)
+            }
+            names.add(0, name)
+            times.add(0, getCurrentTimestamp())
+            ids.add(0, id)
+        }
+    }
+
+    //returns name of all locations in history
     fun getNames(): List<String> {
         return names
     }
 
-    fun getTimestamps(): List<String> {
+    //returns time of all locations in history
+    fun getTimes(): List<String> {
         return times
     }
 
-    fun clearLocation(location: String): Boolean {
-        val index = names.indexOf(location)
-        return if (index != -1) {
-            names.removeAt(index)
-            times.removeAt(index)
-            true                       // something was deleted
+    //returns id of all locations in history
+    fun getIds(): List<String> {
+        return ids
+    }
+
+    //clears a specific location from history
+    fun clearLocation(id: String): Boolean {
+        val curr = ids.indexOf(id)
+        return if (curr == -1) {
+            false
         } else {
-            false                      // nothing matched
+            ids.removeAt(curr)
+            names.removeAt(curr)
+            times.removeAt(curr)
+            true
         }
     }
 
-    fun clearAllLocations(context: Context) {
-        val hadData = names.isNotEmpty() || times.isNotEmpty()
-        if (hadData) {
-            names.clear()
-            times.clear()
-            setPreferences(context)   // save only if Context provided
-        }
+    //clears all locations from history
+    fun clearAllLocations() {
+        names.clear(); times.clear(); ids.clear()
+        setPreferences()
     }
 
-    fun setPreferences(context: Context) {
-        var pref: SharedPreferences =
-            context.getSharedPreferences(context.packageName + "_preferences", Context.MODE_PRIVATE)
-        var editor: SharedPreferences.Editor = pref.edit()
-        editor.putStringSet(PREFERENCE_NAMES, names.toSet())
-        editor.putStringSet(PREFERENCE_TIMES, times.toSet())
-        editor.commit()
+    //saves history to shared preferences
+    fun setPreferences() {
+        pref.edit().apply {
+            putString(PREFERENCE_NAMES, JSONArray(names).toString())
+            putString(PREFERENCE_TIMES, JSONArray(times).toString())
+            putString(PREFERENCE_IDS,   JSONArray(ids  ).toString())
+        }.commit()
     }
 
+    //returns current time as a string
     private fun getCurrentTimestamp(): String {
-        var sdf: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        return sdf.format(Date())
+        var time: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return time.format(Date())
+    }
+
+    //helper function to load lists from shared preferences and keep organization
+    private fun loadList(key: String): MutableList<String> {
+        val all = pref.all[key]
+        val json = when (all) {
+            is String -> all
+            is Set<*> -> JSONArray(all.toList()).toString()
+                .also { pref.edit().putString(key, it).apply() }
+            else -> "[]"
+        }
+        val arr = JSONArray(json)
+        return MutableList(arr.length()) { i -> arr.getString(i) }
     }
 
     companion object {
+        private const val PREFERENCE_IDS   = "location_ids"
         private const val PREFERENCE_NAMES: String = "location_names"
         private const val PREFERENCE_TIMES: String = "location_times"
     }
