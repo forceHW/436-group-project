@@ -10,25 +10,23 @@ class StopDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stop_detail)
 
+        // Show Up arrow
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = intent.getStringExtra("EXTRA_TITLE")
 
-        // Show the stop ID
-        val stopId = intent.getStringExtra("EXTRA_STOP_ID").orEmpty()
-        findViewById<TextView>(R.id.stopIdView).text = "Stop ID: $stopId"
+        // 1) Stop title
+        val title = intent.getStringExtra("EXTRA_TITLE") ?: "Stop Details"
+        supportActionBar?.title = title
+        findViewById<TextView>(R.id.stopTitleView).text = title
 
-        // Grab the list of route IDs
-        val routeIds = intent
-            .getStringArrayListExtra("EXTRA_ROUTE_IDS")
-            .orEmpty()
-
-        // Display them
-        val routesView = findViewById<TextView>(R.id.routesView)
-        routesView.text = if (routeIds.isNotEmpty()) {
-            routeIds.joinToString("\n")
-        } else {
+        // 2) Route IDs
+        val routeIds = intent.getStringArrayListExtra("EXTRA_ROUTE_IDS")
+            ?: arrayListOf()
+        val routesText = if (routeIds.isEmpty()) {
             "No routes serve this stop."
+        } else {
+            routeIds.joinToString(separator = "\n") { "- $it" }
         }
+        findViewById<TextView>(R.id.routesListView).text = routesText
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -36,4 +34,3 @@ class StopDetailActivity : AppCompatActivity() {
         return true
     }
 }
-
