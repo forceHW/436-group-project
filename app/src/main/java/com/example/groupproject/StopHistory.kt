@@ -36,18 +36,17 @@ class StopHistory : AppCompatActivity() {
         historyList = findViewById(R.id.historyView)
         updateHistoryList()
 
-        //Handles clicking on a stop in history
-        historyList.onItemClickListener =
-            android.widget.AdapterView.OnItemClickListener { _, _, position, _ ->
-                val title  = MainActivity.history.getNames()[position]
-                intent = Intent(this, StopDetailActivity::class.java).apply {
-                    putExtra("EXTRA_TITLE", title)
-                }
-                startActivity(intent)
-            }
 
-        //handles double tapping on a stop in history to delete
+        //handles all possible gesture events for the history
         setupGestureDetector()
+
+        historyList.setOnTouchListener { v, event ->
+            if (gestures.onTouchEvent(event)){
+                true
+            } else{
+                v.onTouchEvent(event)
+            }
+        }
 
         //tells users how to use the history
         Toast.makeText(this,"Tap once for details, double‑tap to delete a stop.", Toast.LENGTH_LONG).show()
@@ -100,16 +99,29 @@ class StopHistory : AppCompatActivity() {
         }
     }
 
-    //handles double tapping on a stop in history to delete
+    //handles double tapping on a stop in history to delete and single tapping to view details
     private fun setupGestureDetector() {
-        gestures = GestureDetector(
-            this,
-            object : GestureDetector.SimpleOnGestureListener() {
+        gestures = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+
+               override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                   val pos = historyList.pointToPosition(e.x.toInt(), e.y.toInt())
+                   if (pos != ListView.INVALID_POSITION) {
+                       val id = MainActivity.history.getIds()[pos]
+                       val title = MainActivity.history.getNames()[pos]
+                       intent = Intent(this@StopHistory, StopDetailActivity::class.java).apply {
+                           putExtra("EXTRA_TITLE", title)
+                           putExtra("EXTRA_STOP_ID", id)
+                       }
+                       startActivity(intent)
+                   }
+                   return true
+               }
+
                 override fun onDoubleTap(e: MotionEvent): Boolean {
                     val pos = historyList.pointToPosition(e.x.toInt(), e.y.toInt())
                     if (pos != ListView.INVALID_POSITION) {
-                        val title = MainActivity.history.getNames()[pos]
-                        if (MainActivity.history.clearLocation(title)) {
+                        val id = MainActivity.history.getIds()[pos]
+                        if (MainActivity.history.clearLocation(id)) {
                             MainActivity.history.setPreferences(this@StopHistory)
                             updateHistoryList()
                         }
