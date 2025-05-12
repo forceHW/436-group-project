@@ -6,8 +6,6 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -16,7 +14,7 @@ import com.google.android.gms.ads.AdView
 
 //TODO rename activity 2 and items in nav bar
 //TODO implement something meaningful
-class act2 : AppCompatActivity() {
+class StopHistory : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

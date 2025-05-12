@@ -19,7 +19,7 @@
             android:name=".StopDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".act2"
+            android:name=".StopHistory"
             android:exported="false" />
 
         <meta-data
