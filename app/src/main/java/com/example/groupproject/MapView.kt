@@ -59,9 +59,6 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
         locations.plotAllBusStops()
 
         map.setOnMarkerClickListener { marker ->
-            MainActivity.history.addLocation((marker.tag ?: "No ID") as String,marker.title ?: "Unnamed")
-            MainActivity.history.setPreferences()
-            Log.w("History", MainActivity.history.getNames().toString() + " " + MainActivity.history.getTimes().toString())
             marker.showInfoWindow()
             true
         }
@@ -72,6 +69,11 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
             val title  = marker.title ?: "Stop Details"
 
             Log.d("MapView", "InfoWindow clicked for stopId=$stopId, title=$title")
+
+            // add to history
+            MainActivity.history.addLocation((marker.tag ?: "No ID") as String,marker.title ?: "Unnamed")
+            MainActivity.history.setPreferences()
+            Log.w("History", MainActivity.history.getNames().toString() + " " + MainActivity.history.getTimes().toString())
 
             // 1) Fetch all route IDs
             locations.getAllRouteIds { allRouteIds ->

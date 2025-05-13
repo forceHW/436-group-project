@@ -2,6 +2,8 @@ package com.example.groupproject
 
 import android.util.Log
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import okhttp3.ResponseBody
@@ -98,11 +100,18 @@ class Locations(private val map: GoogleMap) {
                 if (response.isSuccessful) {
                     val stopDetails = response.body()
                     stopDetails?.forEach { detail ->
+
+                        var hue = BitmapDescriptorFactory.HUE_RED
+                        val histoyrIds = MainActivity.history.getIds()
+                        if (histoyrIds.contains(detail.stop_id)) {
+                             hue = BitmapDescriptorFactory.HUE_BLUE
+                        }
                         val pos = LatLng(detail.lat, detail.long)
                         val marker = map.addMarker(    //plot marker onto map
                             MarkerOptions()
                                 .position(pos)
                                 .title(detail.title)
+                                .icon(BitmapDescriptorFactory.defaultMarker(hue))
                         )
                         marker?.tag = detail.stop_id
                     }

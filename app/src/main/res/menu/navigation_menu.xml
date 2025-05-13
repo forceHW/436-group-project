@@ -9,11 +9,7 @@
 
     <item
         android:id="@+id/act3"
-        android:title="Ethan's Miku Game" />
-
-    <item
-        android:id="@+id/settings"
-        android:title="Settings" />
+        android:title="Login" />
 
 
 </menu>

@@ -14,9 +14,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var actionBarToggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
         history = History(this)
+        super.onCreate(savedInstanceState)
 
         mapView = MapView(this)
         setContentView(mapView)
