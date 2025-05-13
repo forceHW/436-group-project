@@ -4,14 +4,26 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.groupproject.R
+import com.google.firebase.auth.FirebaseAuth
 
 class StopDetailActivity : AppCompatActivity() {
+    private lateinit var favorites: Favorites
+    private lateinit var button: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stop_detail)
-
+        button = findViewById(R.id.favoriteButton)
+        if (FirebaseAuth.getInstance().currentUser == null) {
+            Toast.makeText(this, "Please sign in to favorite stops.", Toast.LENGTH_SHORT).show()
+            button.isActivated = false
+            return
+        }else{
+            button.isActivated = false
+            favorites = Favorites()
+        }
         // Show Up arrow
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -35,6 +47,27 @@ class StopDetailActivity : AppCompatActivity() {
             routeIds.joinToString(separator = "\n") { "- $it" }
         }
         findViewById<TextView>(R.id.routesListView).text = routesText
+        var bruh : String = intent.getStringExtra("EXTRA_TITLE")!!
+        var bruh2 : String = intent.getStringExtra("EXTRA_STOP_ID")!!
+        findViewById<Button>(R.id.favoriteButton).setOnClickListener {
+            favorites.addFavorite(bruh2, bruh) { error ->
+                runOnUiThread {
+                    if (error == null) {
+                        Toast.makeText(
+                            this,
+                            "\"$bruh\" added to favorites!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Error adding to favorites:\n${error.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -44,6 +44,12 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
+
+            R.id.act4 ->{
+                val intent = Intent(this, StopFavoritesActivity::class.java)
+                startActivity(intent)
+                true
+            }
             else -> false
         }
     }

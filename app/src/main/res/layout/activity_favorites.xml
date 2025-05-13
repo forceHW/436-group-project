@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--    utulizes lin layout !!!-->
+
+    <LinearLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:fitsSystemWindows="true"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:id="@+id/topbar"
+            android:layout_height="wrap_content"
+            android:text="Favorites"
+            android:textSize="35sp"
+            android:padding="10dp"
+            android:background="@color/blue"
+            android:textColor="@color/white"
+            />
+
+
+        <ListView
+            android:id="@+id/favoritesView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
+            android:padding="16dp" />
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/blue"
+            android:padding="16dp"/>
+
+        <Button
+            android:id="@+id/clearButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Clear All"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/blue"
+            android:padding="16dp"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/adview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".15"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="#CCCCCC">
+
+
+    </LinearLayout>
+</LinearLayout>

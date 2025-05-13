@@ -14,6 +14,7 @@ playServicesMaps = "21.3.0"
 playServicesMapsVersion = "19.1.0"
 retrofit = "2.9.0"
 playServicesAdsApi = "24.2.0"
+firebaseDatabaseKtx = "21.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,6 +30,7 @@ play-services-ads = { module = "com.google.android.gms:play-services-ads", versi
 play-services-maps-v1910 = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMapsVersion" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
 
 
 [plugins]

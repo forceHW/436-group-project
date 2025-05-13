@@ -11,5 +11,9 @@
         android:id="@+id/act3"
         android:title="Login" />
 
+    <item
+        android:id="@+id/act4"
+        android:title="Favorites" />
+
 
 </menu>
