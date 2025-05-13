@@ -56,6 +56,7 @@
         android:layout_gravity="bottom"
         android:layout_marginTop="12dp"
         android:backgroundTint="@color/blue"
+        android:textColor="@color/white"
         android:padding="16dp"
         android:text="Back"
         app:layout_constraintBottom_toBottomOf="parent"
