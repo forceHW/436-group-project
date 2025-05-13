@@ -12,9 +12,12 @@ import com.google.firebase.auth.FirebaseAuth
 class StopDetailActivity : AppCompatActivity() {
     private lateinit var favorites: Favorites
     private lateinit var button: Button
+    private lateinit var fucl : Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stop_detail)
+        fucl = findViewById(R.id.backButton)
+        fucl.setOnClickListener{ finish()}
         button = findViewById(R.id.favoriteButton)
         if (FirebaseAuth.getInstance().currentUser == null) {
             Toast.makeText(this, "Please sign in to favorite stops.", Toast.LENGTH_SHORT).show()
@@ -27,11 +30,7 @@ class StopDetailActivity : AppCompatActivity() {
         // Show Up arrow
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // Back button to previous page
-        val backButton = findViewById<Button>(R.id.backButton)
-        backButton.setOnClickListener {
-            finish()
-        }
+
 
         // 1) Stop title
         val title = intent.getStringExtra("EXTRA_TITLE") ?: "Stop Details"
