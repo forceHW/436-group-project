@@ -29,7 +29,6 @@ class StopHistory : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_stop_history)
 
         historyList = findViewById(R.id.historyView)
