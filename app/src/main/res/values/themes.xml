@@ -21,5 +21,8 @@
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
-
+    <!-- Firebase UI theme -->
+    <style name="FirebaseAuthUI">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
+    </style>
 </resources>
