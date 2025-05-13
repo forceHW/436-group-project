@@ -10,7 +10,6 @@ import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.SimpleAdapter
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -125,16 +124,12 @@ class StopHistory : AppCompatActivity() {
 
                 locations.getAllRouteIds { allRouteIds ->
                     if (allRouteIds.isEmpty()) {
-                        details(id, title, emptyList())
-                        return@getAllRouteIds
+                        return@getAllRouteIds details(id, title, emptyList())
                     }
-                    locations.getRouteStopIds(allRouteIds) { mapOfStops ->
-                        val matchingRoutes = mapOfStops.filter { (_, stops) ->
-                            stops.contains(id)
-                        }.keys.toList()
-                        runOnUiThread {
-                            details(id, title, matchingRoutes)
-                        }
+
+                    locations.getRouteStopIds(allRouteIds) { stopMap ->
+                        val matchingRoutes = stopMap.filterValues { id in it }.keys.toList()
+                        runOnUiThread { details(id, title, matchingRoutes) }
                     }
                 }
             }
