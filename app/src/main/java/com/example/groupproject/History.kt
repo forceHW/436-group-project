@@ -77,7 +77,9 @@ class History(context: Context) {
 
     //clears all locations from history
     fun clearAllLocations() {
-        names.clear(); times.clear(); ids.clear()
+        names.clear()
+        times.clear()
+        ids.clear()
         setPreferences()
     }
 

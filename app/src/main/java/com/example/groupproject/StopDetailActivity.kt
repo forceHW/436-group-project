@@ -1,6 +1,8 @@
 package com.example.groupproject
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.groupproject.R
@@ -12,6 +14,12 @@ class StopDetailActivity : AppCompatActivity() {
 
         // Show Up arrow
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        // Back button to previous page
+        val backButton = findViewById<Button>(R.id.backButton)
+        backButton.setOnClickListener {
+            finish()
+        }
 
         // 1) Stop title
         val title = intent.getStringExtra("EXTRA_TITLE") ?: "Stop Details"
