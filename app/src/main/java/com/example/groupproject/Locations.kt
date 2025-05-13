@@ -58,7 +58,7 @@ interface BusApiService {
     fun getRoutesRaw(@Path("route_ids") routeIds: String): Call<ResponseBody>
 }
 
-class Locations(private val map: GoogleMap) {
+class Locations(private val map: GoogleMap? = null) {
 
     private val retrofit = Retrofit.Builder()  //retrofit init
         .baseUrl("https://api.umd.io/v1/")
@@ -107,7 +107,7 @@ class Locations(private val map: GoogleMap) {
                              hue = BitmapDescriptorFactory.HUE_BLUE
                         }
                         val pos = LatLng(detail.lat, detail.long)
-                        val marker = map.addMarker(    //plot marker onto map
+                        val marker = map?.addMarker(    //plot marker onto map
                             MarkerOptions()
                                 .position(pos)
                                 .title(detail.title)

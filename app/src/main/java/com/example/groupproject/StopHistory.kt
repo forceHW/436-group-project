@@ -122,11 +122,22 @@ class StopHistory : AppCompatActivity() {
             if (pos != ListView.INVALID_POSITION) {
                 val id = MainActivity.history.getIds()[pos]
                 val title = MainActivity.history.getNames()[pos]
-                intent =Intent(this@StopHistory, StopDetailActivity::class.java).apply {
-                    putExtra("EXTRA_TITLE", title)
-                    putExtra("EXTRA_STOP_ID", id)
+                val locations = Locations(map = null)
+
+                locations.getAllRouteIds { allRouteIds ->
+                    if (allRouteIds.isEmpty()) {
+                        details(id, title, emptyList())
+                        return@getAllRouteIds
+                    }
+                    locations.getRouteStopIds(allRouteIds) { mapOfStops ->
+                        val matchingRoutes = mapOfStops.filter { (_, stops) ->
+                            stops.contains(id)
+                        }.keys.toList()
+                        runOnUiThread {
+                            details(id, title, matchingRoutes)
+                        }
+                    }
                 }
-                startActivity(intent)
             }
             return true
         }
@@ -142,6 +153,14 @@ class StopHistory : AppCompatActivity() {
             }
             return true
         }
+    }
 
+    private fun details (id: String, title: String, routes: List<String>){
+        val intent = Intent(this, StopDetailActivity::class.java).apply {
+            putExtra("EXTRA_ID", id)
+            putExtra("EXTRA_TITLE", title)
+            putStringArrayListExtra("EXTRA_ROUTE_IDS", ArrayList(routes))
+        }
+        startActivity(intent)
     }
 }
