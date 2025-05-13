@@ -16,6 +16,7 @@ import com.google.android.material.navigation.NavigationView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 
 class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
 
@@ -74,6 +75,9 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
             MainActivity.history.addLocation((marker.tag ?: "No ID") as String,marker.title ?: "Unnamed")
             MainActivity.history.setPreferences()
             Log.w("History", MainActivity.history.getNames().toString() + " " + MainActivity.history.getTimes().toString())
+
+            //sets marker to blue
+            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
 
             // 1) Fetch all route IDs
             locations.getAllRouteIds { allRouteIds ->
