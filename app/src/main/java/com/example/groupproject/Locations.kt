@@ -2,13 +2,11 @@ package com.example.groupproject
 
 import android.util.Log
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import okhttp3.ResponseBody
 import org.json.JSONArray
-import org.json.JSONObject
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -122,62 +120,6 @@ class Locations(private val map: GoogleMap? = null) {
 
             override fun onFailure(call: Call<List<BusStopDetail>>, t: Throwable) {
                 Log.e("Locations", "Network failure on StopDetails $stopId: ${t.message}")
-            }
-        })
-    }
-
-
-    fun getRoutesForStop(
-        stopId: String,
-        callback: (List<RouteInfo>) -> Unit
-    ) {
-        api.getAllRoutes().enqueue(object : Callback<List<RouteInfo>> {
-            override fun onResponse(
-                call: Call<List<RouteInfo>>,
-                response: Response<List<RouteInfo>>
-            ) {
-                if (!response.isSuccessful) {
-                    callback(emptyList())
-                    return
-                }
-                val routes = response.body().orEmpty()
-                if (routes.isEmpty()) {
-                    callback(emptyList())
-                    return
-                }
-
-                val matches = mutableListOf<RouteInfo>()
-                var remaining = routes.size
-
-                routes.forEach { route ->
-                    api.getRouteStops(route.route_id)
-                        .enqueue(object : Callback<StopsResponse> {
-                            override fun onResponse(
-                                call: Call<StopsResponse>,
-                                resp: Response<StopsResponse>
-                            ) {
-                                if (resp.isSuccessful) {
-                                    val stops = resp.body()?.data?.stops.orEmpty()
-                                    if (stops.any { it.stop_id == stopId }) {
-                                        matches.add(route)
-                                    }
-                                }
-                                if (--remaining == 0) {
-                                    callback(matches)
-                                }
-                            }
-
-                            override fun onFailure(call: Call<StopsResponse>, t: Throwable) {
-                                if (--remaining == 0) {
-                                    callback(matches)
-                                }
-                            }
-                        })
-                }
-            }
-
-            override fun onFailure(call: Call<List<RouteInfo>>, t: Throwable) {
-                callback(emptyList())
             }
         })
     }
