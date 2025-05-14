@@ -133,6 +133,7 @@ class StopFavoritesActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        Toast.makeText(this, "Hold down an entry to remove it", Toast.LENGTH_LONG).show()
         // start listening to changes
         listener = favorites.getFavorites({ items ->
             runOnUiThread {

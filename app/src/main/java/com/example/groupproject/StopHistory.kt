@@ -151,7 +151,7 @@ class StopHistory : AppCompatActivity() {
 
     private fun details (id: String, title: String, routes: List<String>){
         val intent = Intent(this, StopDetailActivity::class.java).apply {
-            putExtra("EXTRA_ID", id)
+            putExtra("EXTRA_STOP_ID", id)
             putExtra("EXTRA_TITLE", title)
             putStringArrayListExtra("EXTRA_ROUTE_IDS", ArrayList(routes))
         }

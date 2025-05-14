@@ -21,10 +21,10 @@ class StopDetailActivity : AppCompatActivity() {
         button = findViewById(R.id.favoriteButton)
         if (FirebaseAuth.getInstance().currentUser == null) {
             Toast.makeText(this, "Please sign in to favorite stops.", Toast.LENGTH_SHORT).show()
-            button.isActivated = false
-            return
+            button.isEnabled = false
+
         }else{
-            button.isActivated = false
+            button.isEnabled = false
             favorites = Favorites()
         }
         // Show Up arrow
