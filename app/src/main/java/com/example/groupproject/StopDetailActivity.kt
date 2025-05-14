@@ -24,7 +24,7 @@ class StopDetailActivity : AppCompatActivity() {
             button.isEnabled = false
 
         }else{
-            button.isEnabled = false
+            button.isEnabled = true
             favorites = Favorites()
         }
         // Show Up arrow

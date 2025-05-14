@@ -62,6 +62,7 @@ class Logins : AppCompatActivity(){
 
         if (user != null) {
             textView.text = "Logged in as: " + user.displayName
+            textView.gravity = 1
             logoutButton.isEnabled = true
         }else{
             textView.text = "Not Logged in"
