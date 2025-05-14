@@ -1,12 +1,11 @@
 package com.example.groupproject
 
-import android.content.Intent
+
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.groupproject.R
 import com.google.firebase.auth.FirebaseAuth
 
 class StopDetailActivity : AppCompatActivity() {
@@ -27,17 +26,14 @@ class StopDetailActivity : AppCompatActivity() {
             button.isEnabled = true
             favorites = Favorites()
         }
-        // Show Up arrow
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
 
-        // 1) Stop title
         val title = intent.getStringExtra("EXTRA_TITLE") ?: "Stop Details"
         supportActionBar?.title = title
         findViewById<TextView>(R.id.stopTitleView).text = title
 
-        // 2) Route IDs
         val routeIds = intent.getStringArrayListExtra("EXTRA_ROUTE_IDS")
             ?: arrayListOf()
         val routesText = if (routeIds.isEmpty()) {

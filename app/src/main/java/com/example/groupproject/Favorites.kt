@@ -20,7 +20,6 @@ class Favorites {
     private val favRef: DatabaseReference
         get() = db.child("users").child(uid).child("favorites")
 
-    /** Add or update a favorite stop */
     fun addFavorite(
         id: String,
         name: String,
@@ -36,7 +35,6 @@ class Favorites {
             }
     }
 
-    /** Remove one favorite */
     fun removeFavorite(
         id: String,
         onComplete: ((Boolean, DatabaseError?) -> Unit)? = null
@@ -47,7 +45,6 @@ class Favorites {
             }
     }
 
-    /** Delete all favorites in a single update */
     fun clearAllFavorites(onComplete: ((DatabaseError?) -> Unit)? = null) {
         // Setting the entire favorites node to null deletes it
         favRef
@@ -56,10 +53,6 @@ class Favorites {
             }
     }
 
-    /**
-     * Listen for live updates, ordered by timestamp desc.
-     * Returns the ValueEventListener so you can remove it in onPause().
-     */
     fun getFavorites(
         onUpdate: (List<FavoriteItem>) -> Unit,
         onError: ((DatabaseError) -> Unit)? = null

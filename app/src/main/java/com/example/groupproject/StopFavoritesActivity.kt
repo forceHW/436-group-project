@@ -17,7 +17,6 @@ class StopFavoritesActivity : AppCompatActivity() {
     private val favorites = Favorites()
     private var listener: ValueEventListener? = null
     private lateinit var bar: TextView
-    private lateinit var locations: Locations
 
     private val fmt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
     private var currentItems: List<Favorites.FavoriteItem> = emptyList()
@@ -44,19 +43,15 @@ class StopFavoritesActivity : AppCompatActivity() {
         adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, mutableListOf())
         listView.adapter = adapter
 
-        // tap to view details
         listView.setOnItemClickListener { _, _, pos, _ ->
             val item   = currentItems[pos]
             val stopId = item.id
             val title  = item.name
 
-            // Instantiate your Locations helper (no map required)
             val locations = Locations(map = null)
 
-            // 1) Fetch all route IDs
             locations.getAllRouteIds { allRouteIds ->
                 if (allRouteIds.isEmpty()) {
-                    // No routes at all → launch detail with empty list
                     Intent(this, StopDetailActivity::class.java).apply {
                         putExtra("EXTRA_STOP_ID",    stopId)
                         putExtra("EXTRA_TITLE",      title)
@@ -66,15 +61,12 @@ class StopFavoritesActivity : AppCompatActivity() {
                         )
                     }.also { startActivity(it) }
                 } else {
-                    // 2) Fetch every route’s stop list
                     locations.getRouteStopIds(allRouteIds) { stopMap ->
-                        // 3) Filter to routes serving this stop
                         val matchingRoutes = stopMap
                             .filter { (_, stops) -> stops.contains(stopId) }
                             .keys
                             .toList()
 
-                        // 4) Launch detail with the real route list
                         Intent(this, StopDetailActivity::class.java).apply {
                             putExtra("EXTRA_STOP_ID",    stopId)
                             putExtra("EXTRA_TITLE",      title)
@@ -88,7 +80,6 @@ class StopFavoritesActivity : AppCompatActivity() {
             }
         }
 
-        // long-press to remove
         listView.setOnItemLongClickListener { _, _, pos, _ ->
             val item = currentItems[pos]
             favorites.removeFavorite(item.id) { success, err ->
@@ -111,7 +102,6 @@ class StopFavoritesActivity : AppCompatActivity() {
             true
         }
 
-        // “Clear all” button
         findViewById<Button>(R.id.clearButton).setOnClickListener {
             favorites.clearAllFavorites { err ->
                 runOnUiThread {
@@ -134,7 +124,6 @@ class StopFavoritesActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Toast.makeText(this, "Hold down an entry to remove it", Toast.LENGTH_LONG).show()
-        // start listening to changes
         listener = favorites.getFavorites({ items ->
             runOnUiThread {
                 currentItems = items
@@ -155,7 +144,6 @@ class StopFavoritesActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        // stop listening
         listener?.let {
             FirebaseAuth.getInstance()
                 .currentUser

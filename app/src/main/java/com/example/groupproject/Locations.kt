@@ -39,26 +39,22 @@ data class StopsResponse(
 
 
 interface BusApiService {
-    @GET("bus/stops")     //find bus stop titles
+    @GET("bus/stops")
     fun getBusStops(): Call<List<BusStopInfo>>
 
-    @GET("bus/stops/{stop_id}")   //allows us to retrieve bus stop lat lon data
+    @GET("bus/stops/{stop_id}")
     fun getBusStopDetails(@Path("stop_id") stopId: String): Call<List<BusStopDetail>>
 
     @GET("bus/routes")
     fun getAllRoutes(): Call<List<RouteInfo>>
 
     @GET("bus/routes/{route_ids}")
-    fun getRouteStops(@Path("route_ids") routeIds: String): Call<StopsResponse>
-
-    // NEW: raw JSON endpoint
-    @GET("bus/routes/{route_ids}")
     fun getRoutesRaw(@Path("route_ids") routeIds: String): Call<ResponseBody>
 }
 
 class Locations(private val map: GoogleMap? = null) {
 
-    private val retrofit = Retrofit.Builder()  //retrofit init
+    private val retrofit = Retrofit.Builder()
         .baseUrl("https://api.umd.io/v1/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
@@ -73,10 +69,9 @@ class Locations(private val map: GoogleMap? = null) {
             ) {
                 if (response.isSuccessful) {
                     val busStops = response.body() ?: return
-                    //Log.d("Locations", "Fetched ${busStops.size} bus stops")
 
                     for (stop in busStops) {
-                        fetchStopDetails(stop.stop_id)  //use auxillary function to plot lat long of each bus
+                        fetchStopDetails(stop.stop_id)
                     }
                 } else {
                     Log.e("Locations", "API err ${response.code()}")
@@ -105,7 +100,7 @@ class Locations(private val map: GoogleMap? = null) {
                              hue = BitmapDescriptorFactory.HUE_BLUE
                         }
                         val pos = LatLng(detail.lat, detail.long)
-                        val marker = map?.addMarker(    //plot marker onto map
+                        val marker = map?.addMarker(
                             MarkerOptions()
                                 .position(pos)
                                 .title(detail.title)
@@ -153,12 +148,6 @@ class Locations(private val map: GoogleMap? = null) {
     }
 
 
-
-    /**
-     * NEW METHOD — prints the full raw JSON returned by
-     * GET /bus/routes/{route_ids}
-     * for any list of IDs you pass in.
-     */
     fun getRouteStopIds(
         routeIds: List<String>,
         callback: (Map<String, List<String>>) -> Unit
@@ -172,7 +161,6 @@ class Locations(private val map: GoogleMap? = null) {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 val result = mutableMapOf<String, List<String>>()
                 if (!response.isSuccessful) {
-                    // on error, return empty lists for each route
                     routeIds.forEach { result[it] = emptyList() }
                     callback(result)
                     return
@@ -180,7 +168,6 @@ class Locations(private val map: GoogleMap? = null) {
                 val raw = response.body()?.string().orEmpty()
                 try {
                     val arr = JSONArray(raw)
-                    // parse each route object in the array
                     for (i in 0 until arr.length()) {
                         val obj = arr.getJSONObject(i)
                         val rid = obj.getString("route_id")
@@ -191,14 +178,12 @@ class Locations(private val map: GoogleMap? = null) {
                         result[rid] = stops
                     }
                 } catch (e: Exception) {
-                    // on parse error, empty lists
                     routeIds.forEach { result[it] = emptyList() }
                 }
                 callback(result)
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                // on network failure, empty lists
                 val result = routeIds.associateWith { emptyList<String>() }
                 callback(result)
             }

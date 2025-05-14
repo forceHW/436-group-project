@@ -33,38 +33,3 @@
         android:layout_gravity="start"
         app:menu="@menu/navigation_menu" />
 </androidx.drawerlayout.widget.DrawerLayout>
-
-
-
-
-<!--    <LinearLayout-->
-<!--        android:id="@+id/bottom_bar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:padding="12dp"-->
-<!--        android:gravity="center"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent">-->
-
-<!--        <Button-->
-<!--            android:id="@+id/button1"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            style="@style/blueButton"-->
-<!--            android:text="Button 1"-->
-<!--            app:cornerRadius="0px" />-->
-
-<!--        <Button-->
-<!--            android:id="@+id/button2"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            style="@style/blueButton"-->
-<!--            android:text="Button 2"-->
-<!--            app:cornerRadius="0px" />-->
-
-<!--    </LinearLayout>-->
-

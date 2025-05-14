@@ -17,8 +17,6 @@ import com.google.android.gms.ads.AdView
 
 
 
-//TODO rename items in nav bar
-//TODO implement something meaningful
 class StopHistory : AppCompatActivity() {
 
     private lateinit var clearButton: Button

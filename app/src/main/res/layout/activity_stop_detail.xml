@@ -18,7 +18,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0">
 
-        <!-- Stop name at top -->
         <TextView
             android:id="@+id/stopTitleView"
             android:layout_width="match_parent"
@@ -29,7 +28,6 @@
             android:textColor="@color/white"
             android:textSize="35sp" />
 
-        <!-- Routes header -->
         <TextView
             android:id="@+id/routesHeaderView"
             android:layout_width="wrap_content"
@@ -64,7 +62,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="24dp"/>
 
-    <!-- NEW: Add to Favorites -->
     <Button
         android:id="@+id/favoriteButton"
         android:layout_width="match_parent"

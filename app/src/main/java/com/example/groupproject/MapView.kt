@@ -22,18 +22,11 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var locations: Locations
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var actionBarToggle: ActionBarDrawerToggle
 
     init {
         LayoutInflater.from(context).inflate(R.layout.activity_main, this, true)  //create child view, allows us to utilize all resources from main
 
 
-
-//        drawerLayout = findViewById(R.id.drawer) //REDUNDAT CODE
-//        actionBarToggle = ActionBarDrawerToggle(context as MainActivity, drawerLayout, R.string.nav_open, R.string.nav_close)
-//        drawerLayout.addDrawerListener(actionBarToggle)
-//        actionBarToggle.syncState()
 
 
 
@@ -64,7 +57,6 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
             true
         }
 
-        // **New**: on info‐window click, fetch all routes then print their stops
         map.setOnInfoWindowClickListener { marker ->
             val stopId = marker.tag as? String ?: return@setOnInfoWindowClickListener
             val title  = marker.title ?: "Stop Details"
@@ -79,7 +71,6 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
             //sets marker to blue
             marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
 
-            // 1) Fetch all route IDs
             locations.getAllRouteIds { allRouteIds ->
                 Log.d("MapView", "All route IDs: $allRouteIds")
 
@@ -93,16 +84,13 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
                         context.startActivity(this)
                     }
                 } else {
-                    // 2) Fetch every route's stops in one go
                     locations.getRouteStopIds(allRouteIds) { mapOfStops ->
-                        // 3) Filter to only those routes whose stop list contains our stopId
                         val matchingRoutes = mapOfStops.filter { (_, stops) ->
                             containsString(stops, stopId)
                         }.keys.toList()
 
                         Log.d("MapView", "Routes serving $stopId: $matchingRoutes")
 
-                        // 4) Launch detail activity with only the matching route IDs
                         Intent(context, StopDetailActivity::class.java).apply {
                             putExtra("EXTRA_STOP_ID", stopId)
                             putExtra("EXTRA_TITLE",   title)
@@ -121,7 +109,7 @@ class MapView(context: Context) : FrameLayout(context), OnMapReadyCallback {
 
     }
 
-    fun containsString(items: List<String>, target: String): Boolean {
+    private fun containsString(items: List<String>, target: String): Boolean {
         for (item in items) {
             if (item == target) return true
         }
