@@ -7,6 +7,12 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 
+
+//25%,25%,25%,25%
+//4 people in group
+
+
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
