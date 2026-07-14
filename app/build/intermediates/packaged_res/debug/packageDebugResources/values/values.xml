@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="http://schemas.android.com/tools">
+    <color name="black">#FF000000</color>
+    <color name="blue">#FF2266BB</color>
+    <color name="gray">#FF888888</color>
+    <color name="ic_launcher_background">#EFEFEF</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">Cool Bus Stops</string>
+    <string name="gcm_defaultSenderId" translatable="false">748484717942</string>
+    <string name="google_api_key" translatable="false">AIzaSyAea5hUy1Xz9SKVK05qS7GCdNGYjLoTm_U</string>
+    <string name="google_app_id" translatable="false">1:748484717942:android:684efb078d732449ecde57</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAea5hUy1Xz9SKVK05qS7GCdNGYjLoTm_U</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyARRRWNziL_dellLzKxau0eXTv9nH8SV4U</string>
+    <string name="google_storage_bucket" translatable="false">groupproject-86ae5.firebasestorage.app</string>
+    <string name="nav_close">Close</string>
+    <string name="nav_open">Open</string>
+    <string name="project_id" translatable="false">groupproject-86ae5</string>
+    <style name="Base.Theme.GroupProject" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        
+    </style>
+    <style name="FirebaseAuthUI">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" ns1:targetApi="35">true</item>
+    </style>
+    <style name="MyToolbarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textSize">35sp</item>
+        <item name="android:background">@color/blue</item>
+    </style>
+    <style name="Theme.GroupProject" parent="Base.Theme.GroupProject">
+        <item name="colorPrimary">@color/blue</item>
+
+    </style>
+    <style name="blueButton" parent="Widget.AppCompat.Button">
+        <item name="android:backgroundTint">#2196F3</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+</resources>

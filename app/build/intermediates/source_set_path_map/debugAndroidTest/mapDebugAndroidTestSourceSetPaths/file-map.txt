@@ -1,0 +1,6 @@
+com.example.groupproject.test.app-core-1.6.1-0 C:\Users\Hoodh\.gradle\caches\8.10.2\transforms\12c0e0bccf650f26a5159ebfb25357ce\transformed\core-1.6.1\res
+com.example.groupproject.test.app-tracing-1.2.0-1 C:\Users\Hoodh\.gradle\caches\8.10.2\transforms\14751e33604b8672a964538d5fea6c68\transformed\tracing-1.2.0\res
+com.example.groupproject.test.app-androidTest-2 C:\Users\Hoodh\AndroidStudioProjects\groupProject\app\build\generated\res\resValues\androidTest\debug
+com.example.groupproject.test.app-mergeDebugAndroidTestResources-3 C:\Users\Hoodh\AndroidStudioProjects\groupProject\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.example.groupproject.test.app-mergeDebugAndroidTestResources-4 C:\Users\Hoodh\AndroidStudioProjects\groupProject\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.example.groupproject.test.app-debugAndroidTest-5 C:\Users\Hoodh\AndroidStudioProjects\groupProject\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources
